@@ -14,6 +14,7 @@ class Node:
     def __init__(self, value, children=[]):
         self.value = value
         self.children = children
+        self.is_checkpoint = False
 
     def __add__(lhs, rhs):
         return add(lhs, rhs)
@@ -25,6 +26,7 @@ class Node:
 One=Node(1)
 NegOne=Node(-1)
 fnOne=lambda: One #this is used in a lot of places. It is good to only have one
+Zero=Node(0)
 
 def add(lhs, rhs):
     return Node(lhs.value + rhs.value, [ [lhs,fnOne] , [rhs,fnOne] ] )
@@ -43,103 +45,78 @@ def cos(var):
     return Node(m_cos(var.value), [ [var, lambda: NegOne*sin(var)]   ] )
 
 
-# def traverse_backward(node, derivatives={}, parent_local_derivative=One):
-#     for child in node.children:
 
-#         child_local_derivative = child[1]()*parent_local_derivative   
+def checkpoint(func):
+    def wrapper(*args):
         
-#         if child[0] in derivatives.keys() :
-#             derivatives[child[0]] += child_local_derivative
-#         else:
-#             derivatives[child[0]]  = child_local_derivative
+        output_node = func(*args)
+        local_derivatives = derivatives(output_node)
         
-#         traverse_backward(child[0], derivatives, child_local_derivative)
+        der_wrt_inputs={}
+        for node in args:
+            if node in local_derivatives:
+                der_wrt_inputs[node]=local_derivatives[node]
+            else:
+                der_wrt_inputs[node]=Zero
 
-# def derivatives(node):
-#     derivatives={}
-#     traverse_backward(node, derivatives)
-#     return derivatives
+        derivatives_wrt_inputs = [ 
+            [node, lambda: der_wrt_inputs[node]] for node in args 
+            ]
+        
+        return Node(output_node.value, derivatives_wrt_inputs)
+    
+    return wrapper
 
-
-########  with topological ordering ########
-# def derivatives(node):
-
-#     local_derivatives={}
-
-#     def topo_sort(node, visited, stack):
-#         visited.add(node)
-#         for child, _ in node.children:
-#             if child not in visited:
-#                 topo_sort(child, visited, stack)
-#         stack.append(node)
-
-#     visited = set()
-#     stack = []
-#     topo_sort(node, visited, stack)
-
-#     while stack:
-#         current_node = stack.pop()
-#         if current_node not in local_derivatives:
-#             local_derivatives[current_node] = One
-
-#         for child in current_node.children:
-#             if child[0] in local_derivatives.keys() :
-#                 local_derivatives[child[0]] += child[1]() * local_derivatives[current_node]
-#             else:
-#                 local_derivatives[child[0]]  = child[1]() * local_derivatives[current_node]
-
-
-#     return local_derivatives
-
-
-### iteratively to avoid recursion limits ###
 def derivatives(node):
-    local_derivatives={}
-    parent_local_derivative=One
+    local_derivatives = {}
+    parent_local_derivative = One
 
     stack = [(node, parent_local_derivative)]
 
     while stack:
         current_node, current_parent_local_derivative = stack.pop()
 
-        for child_node in current_node.children:
-            
-            child_local_derivative = child_node[1]() * current_parent_local_derivative
-
-            if child_node[0] in local_derivatives:
-                local_derivatives[child_node[0]] += child_local_derivative
+        if current_node.is_checkpoint:
+            # If the current node is a checkpoint, treat it as a primitive
+            if current_node in local_derivatives:
+                local_derivatives[current_node] += current_parent_local_derivative
             else:
-                local_derivatives[child_node[0]] = child_local_derivative
+                local_derivatives[current_node] = current_parent_local_derivative
+            continue
 
-            stack.append((child_node[0], child_local_derivative))
+        for child_node, grad_fn in current_node.children:
+            child_local_derivative = grad_fn()*current_parent_local_derivative
+
+            if child_node in local_derivatives:
+                local_derivatives[child_node] += child_local_derivative
+            else:
+                local_derivatives[child_node] = child_local_derivative
+
+            stack.append((child_node, child_local_derivative))
 
     return local_derivatives
 
 
-from time import time
-from sys import stderr
+
+
 
 def main():
-    a = Node(1.)
-    b = Node(1.)
+    @checkpoint
+    def fun(x,y):
+        return x
 
-    _=time()
-    T=a
-    
-    for i in range(9999):
-        T*=a 
+    x=Node(5)
+    y=Node(2)
 
-    for i in range(10000):
-        T*=b
+    F=fun(x,y)
 
-    print(round(time()-_,3),file=stderr)
 
-    _=time()
-    derivatives1=derivatives(T)
-    print(round(time()-_,3),file=stderr)
+    DF = derivatives(F)
 
-    print(derivatives1[a].value)
-    print(derivatives1[b].value)
+    # print( list(DF.keys()) )
+    # print( DF[x].value )
+    # print( DF[y].value )
+    print( F.children[0][1]().value )
 
 
 
