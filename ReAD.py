@@ -43,7 +43,6 @@ def cos(var):
     return Node(m_cos(var.value), [ [var, lambda: NegOne*sin(var)]   ] )
 
 
-
 # def traverse_backward(node, derivatives={}, parent_local_derivative=One):
 #     for child in node.children:
 
@@ -63,49 +62,84 @@ def cos(var):
 
 
 ########  with topological ordering ########
+# def derivatives(node):
+
+#     local_derivatives={}
+
+#     def topo_sort(node, visited, stack):
+#         visited.add(node)
+#         for child, _ in node.children:
+#             if child not in visited:
+#                 topo_sort(child, visited, stack)
+#         stack.append(node)
+
+#     visited = set()
+#     stack = []
+#     topo_sort(node, visited, stack)
+
+#     while stack:
+#         current_node = stack.pop()
+#         if current_node not in local_derivatives:
+#             local_derivatives[current_node] = One
+
+#         for child in current_node.children:
+#             if child[0] in local_derivatives.keys() :
+#                 local_derivatives[child[0]] += child[1]() * local_derivatives[current_node]
+#             else:
+#                 local_derivatives[child[0]]  = child[1]() * local_derivatives[current_node]
+
+
+#     return local_derivatives
+
+
+### iteratively to avoid recursion limits ###
 def derivatives(node):
-
     local_derivatives={}
-    def topo_sort(node, visited, stack):
-        visited.add(node)
-        for child, _ in node.children:
-            if child not in visited:
-                topo_sort(child, visited, stack)
-        stack.append(node)
+    parent_local_derivative=One
 
-    visited = set()
-    stack = []
-    topo_sort(node, visited, stack)
+    stack = [(node, parent_local_derivative)]
 
     while stack:
-        current_node = stack.pop()
-        if current_node not in local_derivatives:
-            local_derivatives[current_node] = One
+        current_node, current_parent_local_derivative = stack.pop()
 
-        for child in current_node.children:
-            if child[0] in local_derivatives.keys() :
-                local_derivatives[child[0]] += child[1]() * local_derivatives[current_node]
+        for child_node in current_node.children:
+            
+            child_local_derivative = child_node[1]() * current_parent_local_derivative
+
+            if child_node[0] in local_derivatives:
+                local_derivatives[child_node[0]] += child_local_derivative
             else:
-                local_derivatives[child[0]]  = child[1]() * local_derivatives[current_node]
+                local_derivatives[child_node[0]] = child_local_derivative
 
+            stack.append((child_node[0], child_local_derivative))
 
     return local_derivatives
 
 
-
+from time import time
+from sys import stderr
 
 def main():
     a = Node(1.)
-    b = Node(2.)
-    g=a
+    b = Node(1.)
 
-    for i in range(100):
-        g*=a 
+    _=time()
+    T=a
+    
+    for i in range(9999):
+        T*=a 
 
-    T=sin(sin(sin(sin(sin(sin(g))+g*b))))
+    for i in range(10000):
+        T*=b
 
+    print(round(time()-_,3),file=stderr)
+
+    _=time()
     derivatives1=derivatives(T)
+    print(round(time()-_,3),file=stderr)
+
     print(derivatives1[a].value)
+    print(derivatives1[b].value)
 
 
 
