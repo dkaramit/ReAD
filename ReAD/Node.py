@@ -5,10 +5,14 @@
 # A node without childern is a variable, while a node with children is
 # an operation.
 
+def trivial_return(x):
+    return x
+
 class Node:
-    def __init__(self, value, children=[]):
+    def __init__(self, value, children=[],evaluate=trivial_return):
         self.value = value
         self.children = children
+        self.evaluate=evaluate
 
     def __add__(lhs, rhs):
         return add(lhs, rhs)
