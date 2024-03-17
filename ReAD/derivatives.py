@@ -1,7 +1,7 @@
 from .Node import Node, One, NegOne, Zero
 
 def derivatives(node):
-    local_derivatives={}
+    local_derivatives={node: One}
     parent_local_derivative=One
 
     stack = [(node, parent_local_derivative)]
