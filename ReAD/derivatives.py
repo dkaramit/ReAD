@@ -8,7 +8,7 @@ Args:
 Returns:
     A dictionary mapping each Node in the graph to its local derivative value.
 """
-def derivatives(node):
+def derivatives(node: 'Node')-> dict:
     local_derivatives={node: One}
     parent_local_derivative=One
 
