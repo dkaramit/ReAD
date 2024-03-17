@@ -11,7 +11,7 @@ node (Node): The root node to traverse from.
 values (dict): A dictionary mapping node names to new values.
 """
 #traverse throught the tree and update the values of all nodes
-def update_values(node:'Node',values:dict)->float:
+def update_values(node,values):
         stack=[[node,False]]
         while stack:
             node,visited=stack.pop()

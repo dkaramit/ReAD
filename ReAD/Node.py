@@ -1,5 +1,3 @@
-from typing import List, Callable
-
 # A Node is basically a point of tree
 # A Node has a value and a list of children.abs
 # The value is the value of the node, and the childen represent
@@ -22,7 +20,7 @@ Attributes:
   evaluate (callable): The function to evaluate this node. Default is trivial_return.
 """
 class Node:
-    def __init__(self, value: float, children: List=[],evaluate: Callable=trivial_return):
+    def __init__(self, value, children=[], evaluate=trivial_return):
         self.value = value
         self.children = children
         self.evaluate=evaluate

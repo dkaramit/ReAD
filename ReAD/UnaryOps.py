@@ -11,7 +11,7 @@ def derivative_of_exp(var):
     def compute_derivative():
         return exp(var)  # This will be called later, not immediately.
     return compute_derivative
-def exp(var:'Node')->'Node':
+def exp(var):
     return Node(m_exp(var.value), [(var, derivative_of_exp(var))], m_exp)
 
 
@@ -19,12 +19,12 @@ def derivative_of_sin(var):
     def compute_derivative():
         return cos(var)  
     return compute_derivative
-def sin(var:'Node')->'Node':
+def sin(var):
     return Node(m_sin(var.value), [(var, derivative_of_sin(var))], m_sin)
 
 def derivative_of_cos(var):
     def compute_derivative():
         return NegOne*sin(var)  
     return compute_derivative
-def cos(var:'Node')->'Node':
+def cos(var):
     return Node(m_cos(var.value), [(var, derivative_of_cos(var))], m_cos)

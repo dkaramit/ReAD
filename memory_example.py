@@ -35,9 +35,9 @@ def m1():
     for i in range(M):
         F=F+fun(x,y)
 
-    DF = rd.derivatives(F)
+    DF = rd.compute_derivatives(F)
     # print(DF[y].value)
-    DDF = rd.derivatives(DF[x])
+    DDF = rd.compute_derivatives(DF[x])
     print(DDF[y].value)
     
     memory_use = process.memory_info().rss
@@ -48,9 +48,9 @@ def m2():
     for i in range(M):
         G=G+gun(x,y)
 
-    DG = rd.derivatives(G)
+    DG = rd.compute_derivatives(G)
     # print(DG[y].value)
-    DDG = rd.derivatives(DG[x])
+    DDG = rd.compute_derivatives(DG[x])
     print(DDG[y].value)
 
     
