@@ -1,5 +1,13 @@
 from .Node import Node, One, NegOne, Zero
 
+"""Computes the derivatives for a computational graph rooted at node.
+
+Args:
+    node: The root Node of the computational graph.
+
+Returns:
+    A dictionary mapping each Node in the graph to its local derivative value.
+"""
 def derivatives(node):
     local_derivatives={node: One}
     parent_local_derivative=One
