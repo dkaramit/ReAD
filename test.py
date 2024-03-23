@@ -1,21 +1,37 @@
 import ReAD as rd
 
+def topo_sort(node,stack,visited):
+
+    visited.add(node)
+    for child, _ in node.children:
+        if child not in visited:
+            topo_sort(child, stack, visited)
+    stack.append(node)
+    return stack
+
+
+def topological_sort(node):
+    visited = set()
+    stack = []
+    sorted_nodes = []
+
+
+    return sorted_nodes
+    
+
+
+
+
+
 _ONE=rd.Node(1)
 def derivatives(node):
 
     local_derivatives={}
 
-    def topo_sort(node, visited, stack):
-        visited.add(node)
-        for child, _ in node.children:
-            if child not in visited:
-                topo_sort(child, visited, stack)
-        stack.append(node)
-
     visited = set()
     stack = []
-    topo_sort(node, visited, stack)
-        
+    topo_sort(node, stack, visited)
+    
     while stack:
         current_node = stack.pop()
         if current_node not in local_derivatives:
@@ -84,3 +100,15 @@ def m2():
 
 m1();gc.collect()
 m2()
+
+# x=rd.Node(2)
+# y=rd.Node(4)
+
+# z=x+y*rd.sin(x)
+# for _ in range(10):
+#     z=rd.sin(z+x*y)
+
+# t1=topo_sort(z)
+# t2=topological_sort(z)
+
+# print(set(  [ _[0]==_[1]   for _ in zip(t1,t2)  ]  ))
