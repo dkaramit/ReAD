@@ -43,7 +43,13 @@ def new_fun(x,y):
     z=x+y*rd.sin(x*y)
     for _ in range(50):
         z=rd.sin(x*y)+(z+x*y)*y*y
-    return z
-
-    
+    return z 
 ```
+
+# To do
+- Use `topological_sort` only once per expression, since the order doesn't change.
+- Allow `Node` to take list of values instead just one, potentially reducing the number of nodes created.
+- Find a way to put all sequential additions and multiplications under the same node. For example, x+y+z+w
+should create one node instead of four.
+- Define constants to reduce the number of nodes that will act as "active nodes" *(nodes wrt which you can differentiate). This could be as simple as an addition of a bool in the `Node` class.
+- Add some simplification rules. The constants could help as we can use things like $0 x=0$, $1 x=x$ etc. to reduce the number of operations and nodes.
