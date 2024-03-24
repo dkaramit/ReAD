@@ -1,5 +1,5 @@
 from .Node import Node
-from .compute_derivatives import topo_sort
+from .topological_sort import topological_sort
 # Note: since the derivatives are defined as functions, their value
 # is pulled from self every time is needed. So, you only need to update
 # node.value!   
@@ -13,7 +13,7 @@ values (dict): A dictionary mapping node names to new values.
 
 def update_values(node, values):
     stack = []
-    topo_sort(node, stack)
+    topological_sort(node, stack)
 
     for node in stack:
         if node.input_nodes:
