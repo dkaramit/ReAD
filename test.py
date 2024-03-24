@@ -40,7 +40,10 @@ def m1():
     #if you don't clean them, the derivative graphs exist even 
     # if you reassign the top nodes...
     del dz, dxdz, dydz
+    dz=dxdz=dydz={}
     gc.collect()
+    memory_use = process.memory_info().rss
+    print(f"Memory end: {memory_use / (1024 * 1024):.2f} MB")
 
     rd.update_values(z, {x:0.2, y:0.3} )
     dz=rd.compute_derivatives(z)

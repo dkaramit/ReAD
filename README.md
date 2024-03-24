@@ -24,12 +24,26 @@ y = rd.Node(2)
 f = rd.sin(x + y) * rd.exp(x)
 
 # Compute derivatives
-Df = rd.derivatives(f)
+Df = rd.compute_derivatives(f)
 print(Df[x].value)#df/dx
 print(Df[y].value)#df/dx
 
 # Compute second derivatives
-DDf = rd.derivatives(Df[x])
+DDf = rd.compute_derivatives(Df[x])
 print(DDf[x].value)#d^2f/dx^2
 print(DDf[y].value)#d^2f/dxdy
+
+# Update the values of the input nodes and compute all others
+rd.update_values(f, {x:0.2, y:0.3} )
+Df=DDf={} #empty the derivative dictionaries (may need to run gc.collect())
+
+#package a "large" function to potentially save some memory.
+@rd.boxit
+def new_fun(x,y):
+    z=x+y*rd.sin(x*y)
+    for _ in range(50):
+        z=rd.sin(x*y)+(z+x*y)*y*y
+    return z
+
+    
 ```
