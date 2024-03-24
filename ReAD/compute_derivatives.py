@@ -1,31 +1,48 @@
 from .Node import Node, One, NegOne, Zero
 
-"""Computes the derivatives for a computational graph rooted at node.
 
-Args:
-    node: The root Node of the computational graph.
+def topo_sort(node,sorted_nodes):
+    visited = set()
+    stack = []
 
-Returns:
-    A dictionary mapping each Node in the graph to its local derivative value.
-"""
-def compute_derivatives(node):
-    local_derivatives={node: One}
-    parent_local_derivative=One
-
-    stack = [(node, parent_local_derivative)]
+    stack.append(node)
 
     while stack:
-        current_node, current_parent_local_derivative = stack.pop()
+        current_node = stack.pop()
 
-        for child_node in current_node.children:
+        if current_node in visited:
+            sorted_nodes.append(current_node)
+            continue
+
+        visited.add(current_node)
+        stack.append(current_node)
+
+        for child, _ in current_node.children:
+            if not child in visited:
+                stack.append(child)
+
+
+
+def compute_derivatives(node):
+
+    local_derivatives={node:One}
+
+    stack = []
+    topo_sort(node, stack)
+    
+    while stack:
+        current_node = stack.pop()
+        
+        #####----I think that this is not needed---#####
+        # if current_node not in local_derivatives:
+            # local_derivatives[current_node] = One
+        #####--------------------------------------#####
+
+        for child in current_node.children:
             
-            child_local_derivative = child_node[1]() * current_parent_local_derivative
-
-            if child_node[0] in local_derivatives:
-                local_derivatives[child_node[0]] += child_local_derivative
+            if child[0] in local_derivatives.keys() :
+                local_derivatives[child[0]] += child[1]() * local_derivatives[current_node]
             else:
-                local_derivatives[child_node[0]] = child_local_derivative
-
-            stack.append((child_node[0], child_local_derivative))
+                local_derivatives[child[0]]  = child[1]() * local_derivatives[current_node]
 
     return local_derivatives

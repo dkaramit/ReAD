@@ -1,7 +1,7 @@
 import ReAD as rd
 
-N=10
-M=100
+N=30
+M=1000
 def gun(x,y):
     r=x*y
     for _ in range(N):
@@ -18,6 +18,7 @@ def fun(x,y):
 
 import psutil
 import os
+import gc
 
 # Get the current process
 process = psutil.Process(os.getpid())
@@ -57,5 +58,5 @@ def m2():
     memory_use = process.memory_info().rss
     print(f"No checkpoint: {memory_use / (1024 * 1024):.2f} MB")
 
-m1()
+m1();gc.collect()
 m2()
