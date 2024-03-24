@@ -1,8 +1,8 @@
 # A Node is basically a point of tree
-# A Node has a value and a list of children.abs
+# A Node has a value and a list of input_nodes.abs
 # The value is the value of the node, and the childen represent
 # the nodesthat lie below this one and their derivatives.
-# A node without childern is a variable, while a node with children is
+# A node without childern is a variable, while a node with input_nodes is
 # an operation.
 
 #This is intented to be used as default value for the evaluate function.
@@ -16,13 +16,13 @@ def trivial_return(x):
 
 Attributes:
   value (any): The value stored in this node. 
-  children (list): The child nodes below this node.
+  input_nodes (list): The child nodes below this node.
   evaluate (callable): The function to evaluate this node. Default is trivial_return.
 """
 class Node:
-    def __init__(self, value, children=[], evaluate=trivial_return):
+    def __init__(self, value, input_nodes=[], evaluate=trivial_return):
         self.value = value
-        self.children = children
+        self.input_nodes = input_nodes
         self.evaluate=evaluate
 
     def __add__(lhs, rhs):

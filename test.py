@@ -4,10 +4,18 @@ import ReAD as rd
 import psutil
 import os
 import gc
+from time import time
+
 # Get the current process
 process = psutil.Process(os.getpid())
+def timeit(fun):
+    def wrapper(*args):
+        t0=time()
+        fun(*args)
+        print(f"Time taken for {fun.__name__}:",time()-t0,'s')
+    return wrapper
 
-
+@timeit
 def m1():   
     memory_use = process.memory_info().rss
     print(f"Memory start: {memory_use / (1024 * 1024):.2f} MB")
@@ -26,6 +34,22 @@ def m1():
     print(dxdz[x].value,dxdz[y].value)
     print(dydz[x].value,dydz[y].value)
     
+    memory_use = process.memory_info().rss
+    print(f"Memory end: {memory_use / (1024 * 1024):.2f} MB")
+    
+    #if you don't clean them, the derivative graphs exist even 
+    # if you reassign the top nodes...
+    del dz, dxdz, dydz
+    gc.collect()
+
+    rd.update_values(z, {x:0.2, y:0.3} )
+    dz=rd.compute_derivatives(z)
+    print(dz[x].value,dz[y].value)
+    dxdz=rd.compute_derivatives(dz[x])
+    dydz=rd.compute_derivatives(dz[y])
+    print(dxdz[x].value,dxdz[y].value)
+    print(dydz[x].value,dydz[y].value)
+
     memory_use = process.memory_info().rss
     print(f"Memory end: {memory_use / (1024 * 1024):.2f} MB")
 

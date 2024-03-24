@@ -17,9 +17,9 @@ def topo_sort(node,sorted_nodes):
         visited.add(current_node)
         stack.append(current_node)
 
-        for child, _ in current_node.children:
-            if not child in visited:
-                stack.append(child)
+        for input_node, _ in current_node.input_nodes:
+            if not input_node in visited:
+                stack.append(input_node)
 
 
 
@@ -32,17 +32,17 @@ def compute_derivatives(node):
     
     while stack:
         current_node = stack.pop()
-        
+
         #####----I think that this is not needed---#####
         # if current_node not in local_derivatives:
             # local_derivatives[current_node] = One
         #####--------------------------------------#####
 
-        for child in current_node.children:
+        for input_node in current_node.input_nodes:
             
-            if child[0] in local_derivatives.keys() :
-                local_derivatives[child[0]] += child[1]() * local_derivatives[current_node]
+            if input_node[0] in local_derivatives.keys() :
+                local_derivatives[input_node[0]] += input_node[1]() * local_derivatives[current_node]
             else:
-                local_derivatives[child[0]]  = child[1]() * local_derivatives[current_node]
+                local_derivatives[input_node[0]]  = input_node[1]() * local_derivatives[current_node]
 
     return local_derivatives
