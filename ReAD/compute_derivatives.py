@@ -1,6 +1,7 @@
 from .Node import Node, One, NegOne, Zero
 from .topological_sort import topological_sort
 
+
 def compute_derivatives(node):
 
     local_derivatives={node:One}
