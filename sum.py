@@ -47,11 +47,19 @@ def _mul(*a):
     for _ in a[1:]:
         p*=_
     return p
+
+#not very efficient, but it is expressive :)
 def product(a,exclude):
-    p=a[0]
-    for _ in a[1:]:
-        if _!= exclude:
-            p=p* _
+    p=rd.Node(1.)
+    s=False
+    for _ in a:
+        if _ != exclude:
+            p=mul(p,_)
+        #remove one one of the excluded nodes (the derivative of x*x should be x)
+        if _ == exclude:
+            if s:
+                p=mul(p,_)
+            s=True
     return p
 
 def mul(lhs, rhs):
@@ -84,30 +92,31 @@ def m1():
     x = rd.Node(0.14)
     y = rd.Node(0.23)
     
-    z=x*y
-    h=mul(x,y) 
-
-    # print([_[0] for _ in z.input_nodes])
-    # print([_[0] for _ in h.input_nodes])
-    # print(x,y,tmp,h,z)
+    z=x*(y+x)*y
+    h=mul(x,mul(add(y,x),y))
 
 
-    Dz=rd.compute_derivatives(z)
-    Dh=rd.compute_derivatives(h)
+    print([_[0] for _ in z.input_nodes])
+    print([_[0] for _ in h.input_nodes])
+    print(x,y,h,z)
+
+
+    # Dz=rd.compute_derivatives(z)
+    # Dh=rd.compute_derivatives(h)
     
-    print(z.value,h.value)
-    print(Dz[x].value,Dz[y].value)
-    print(Dh[x].value,Dh[y].value)
+    # print(z.value,h.value)
+    # print(Dz[x].value,Dz[y].value)
+    # print(Dh[x].value,Dh[y].value)
 
-    rd.update_values(z, {x:1.2, y:4.3} )
-    rd.update_values(h, {x:1.2, y:4.3} )
+    # rd.update_values(z, {x:1.2, y:4.3} )
+    # rd.update_values(h, {x:1.2, y:4.3} )
 
-    Dz=rd.compute_derivatives(z)
-    Dh=rd.compute_derivatives(h)
+    # Dz=rd.compute_derivatives(z)
+    # Dh=rd.compute_derivatives(h)
     
-    print(z.value,h.value)
-    print(Dz[x].value,Dz[y].value)
-    print(Dh[x].value,Dh[y].value)
+    # print(z.value,h.value)
+    # print(Dz[x].value,Dz[y].value)
+    # print(Dh[x].value,Dh[y].value)
 
 
 
