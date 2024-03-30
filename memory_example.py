@@ -1,7 +1,7 @@
 import ReAD as rd
 
-N=30
-M=1000
+N=50
+M=550
 def gun(x,y):
     r=x*y
     for _ in range(N):

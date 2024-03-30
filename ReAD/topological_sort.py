@@ -13,7 +13,6 @@ def topological_sort(node,sorted_nodes):
 
     while stack:
         current_node = stack.pop()
-        
         #if the element is already in the sorted list, go to the next one
         if current_node in sorted_nodes:
             continue

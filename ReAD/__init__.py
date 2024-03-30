@@ -1,6 +1,6 @@
 from .Node import Node
 from .UnaryOps import exp, sin, cos
-from .BinaryOps import add, mul, evaluate
+from .BinaryOps import add, mul
 from .topological_sort import topological_sort
 from .compute_derivatives import compute_derivatives
 from .update_values import update_values
