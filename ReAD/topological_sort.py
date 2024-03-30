@@ -11,6 +11,7 @@ def topological_sort(node,sorted_nodes):
     visited = set()
     stack = [node]
 
+    order=0
     while stack:
         current_node = stack.pop()
         #if the element is already in the sorted list, go to the next one
@@ -21,7 +22,8 @@ def topological_sort(node,sorted_nodes):
         #Note that the current_node is added to the list, only after its 
         # input nodes have been added to the sorted list.
         if current_node in visited:
-            sorted_nodes.append(current_node)
+            sorted_nodes[order] = current_node
+            order+=1
             continue
 
         visited.add(current_node)

@@ -11,11 +11,17 @@ node (Node): The root node to traverse from.
 values (dict): A dictionary mapping node names to new values.
 """
 
-def update_values(node, values):
-    stack = []
-    topological_sort(node, stack)
+def update_values(root_node, values):
+    stack = {}
+    topological_sort(root_node, stack)
 
-    for node in stack:
+    
+    #traverse in topological order
+    order=0
+    while order<len(stack):
+        node = stack[order]
+        order+=1
+
         if node.input_nodes:
             node.value = node.evaluate(*[child[0].value for child in node.input_nodes])
         else:

@@ -6,11 +6,14 @@ def compute_derivatives(node):
 
     local_derivatives={node:One}
 
-    stack = []
+    stack = {}
     topological_sort(node, stack)
     
-    while stack:
-        current_node = stack.pop()
+    #traverse in reverse topological order
+    order=len(stack)-1
+    while order>=0:
+        current_node = stack[order]
+        order-=1
 
         #####----I think that this is not needed---#####
         # if current_node not in local_derivatives:
