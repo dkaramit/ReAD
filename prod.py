@@ -62,11 +62,13 @@ evaluate[mul]=_mul
 
 @timeit
 def m1(): 
-    x = rd.Node(0.14)
-    y = rd.Node(0.23)
+    x = rd.Node(1.14)
+    y = rd.Node(-20.23)
     
-    z=x*x*y
-    h=mul(x, mul( x , y) )
+    t=y+x
+    z=x*x*t*y
+    
+    h=mul(x, mul( mul(x,t) , y) )
 
 
 
@@ -75,7 +77,7 @@ def m1():
     # these two should be the same, and should have more 
     # inputs than z (z always has two!)
     print(*[_[0] for _ in h.input_nodes])
-    print(x,x,y)
+    print(x,x,t,y)
 
 
     Dz=rd.compute_derivatives(z)
