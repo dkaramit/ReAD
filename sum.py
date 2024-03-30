@@ -65,38 +65,12 @@ def m1():
     x = rd.Node(0.14)
     y = rd.Node(0.23)
     
-    z=x*(y+x)*y
-    h=mul(x, mul( y+x , y) )
-
-    # for i in range(10):
-    #     z=z*(x*y)
-    #     h=mul(h, mul( x , y )  )
-
-
-    # print([_[0] for _ in z.input_nodes])
-    # print([_[0] for _ in h.input_nodes])
-    # print(x,y,h,z)
-
-
-    Dz=rd.compute_derivatives(z)
-    Dh=rd.compute_derivatives(h)
+    z=(x+x)+((x+y)+y)+y
+    #as you can see, the input nodes of z are only x and y!
+    print(*[_[0] for _ in z.input_nodes])
     
-    print(z.value,h.value)
-    print(Dz[x].value,Dz[y].value)
-    print(Dh[x].value,Dh[y].value)
-
-    rd.update_values(z, {x:1.2, y:4.3} )
-    rd.update_values(h, {x:1.2, y:4.3} )
-
-    Dz=rd.compute_derivatives(z)
-    Dh=rd.compute_derivatives(h)
-    
-    print(z.value,h.value)
-    print(Dz[x].value,Dz[y].value)
-    print(Dh[x].value,Dh[y].value)
-
-
-
+    #the result should be the same as
+    print(x,x,x,y,y,y)
 
     return
 
