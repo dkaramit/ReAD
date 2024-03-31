@@ -1,4 +1,7 @@
+from math import cos as m_pow
+
 from .Node import Node, One, NegOne, Zero
+
 evaluate={}
 
 fnOne=lambda: One
@@ -29,6 +32,42 @@ def _add(*a):
         s+=_
     return s
 evaluate[add]=_add
+
+def sub(lhs, rhs):
+    return add(lhs, -rhs)
+
+
+
+
+def derivative_of_div_num(num,den):
+    def compute_derivative():
+        return  One/den
+    return compute_derivative
+def derivative_of_div_den(num,den):
+    def compute_derivative():
+        return -num/(den*den)  
+    return compute_derivative
+def div(num, den):
+    return Node(num.value / den.value, [ [num,derivative_of_div_num(num,den)] , [den,derivative_of_div_den(num,den)] ], 
+    _div)
+def _div(num, den):
+    return num/den
+evaluate[div]=_div
+
+
+def derivative_of_pow_base(base,exp):
+    def compute_derivative():
+        return exp*base**(exp+NegOne)
+    return compute_derivative
+def derivative_of_pow_exp(base,exp):
+    def compute_derivative():
+        return  base**exp*log(base)
+    return compute_derivative
+
+def pow(base, exp):
+    return Node(base.value**exp.value, [(base, derivative_of_pow_base(base,exp)),(exp, derivative_of_pow_exp(base,exp))], m_pow)
+evaluate[pow]=m_pow
+from .UnaryOps import log
 
 
 

@@ -25,15 +25,28 @@ class Node:
         self.input_nodes = input_nodes
         self.evaluate=evaluate
 
-    def __add__(lhs, rhs):
-        return add(lhs, rhs)
+    def __add__(self,other):
+        return add(self,other)
     
-    def __mul__(lhs, rhs):
-        return mul(lhs, rhs)
+    def __mul__(self,other):
+        return mul(self,other)
+   
+    def __neg__(self):
+        return neg(self)
+
+    def __sub__(self,other):
+        return sub(self,other)
     
+    def __pow__(self, other):
+        return pow(self,other)
+
+    def __truediv__(self,other):
+        return div(self,other)
+
 #auxiliary variables
 One=Node(1)
 NegOne=Node(-1)
 Zero=Node(0)
 
-from .BinaryOps import add, mul
+from .BinaryOps import add, mul, sub, pow, div
+from .UnaryOps import neg
