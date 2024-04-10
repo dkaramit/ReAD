@@ -1,4 +1,4 @@
-from .Node import Node
+from .Node import Node,Zero
 from .compute_derivatives import compute_derivatives
 
 #auxiliary function to be used in the input_nodes of a node.
@@ -24,5 +24,7 @@ def boxit(func):
         for node in args:
             if node in local_derivatives.keys():
                 input_nodes.append([node, derivative_of_this(local_derivatives[node])])
+            else:
+                input_nodes.append([node, derivative_of_this(Zero)])
         return Node(func_node.value, input_nodes)
     return wrapper
